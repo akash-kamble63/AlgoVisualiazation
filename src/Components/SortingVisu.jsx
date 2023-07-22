@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import "./SortingVisu.css"
-import {BubbleSort} from "./SortAlgo"
+import {BubbleSort,selectionSort} from "./SortAlgo"
 
 
 
@@ -12,7 +12,7 @@ function SortingVisu() {
 
     const generateRandomNumbers = () => {
         const newRandomNumbers = [];
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 120; i++) {
           newRandomNumbers.push(Math.floor(Math.random() * (700 - 5 + 1)) + 5);
         }
         setRandomNumbers(newRandomNumbers);
@@ -22,11 +22,14 @@ function SortingVisu() {
         generateRandomNumbers();
     }, []);
 
-    // const BubbleSortAlgo = ()=>{
-    //     const JsSort = randomNumbers.slice().sort((a,b) => a - b);
-    //     const MySort = BubbleSort(randomNumbers);
-    //     console.log(arrayEqual(JsSort,MySort));
-    // }
+    //Testing function
+    const SortAlgoTest = ()=>{
+        const JsSort = randomNumbers.slice().sort((a,b) => a - b);
+        const MySort = selectionSort(randomNumbers);
+        // console.log(JsSort);
+        console.log(MySort[0].type);
+        // console.log(arrayEqual(JsSort,MySort));
+    }
 
     const BubbleSortAlgo = () => {
         const animations = BubbleSort(randomNumbers);
@@ -58,6 +61,40 @@ function SortingVisu() {
             }
         }
       };
+
+      const SelectionSortVisu = () => {
+        const animations = selectionSort(randomNumbers);
+        const arrayBars = document.getElementsByClassName('array-bar');
+      
+        for (let i = 0; i < animations.length; i++) {
+            const animation = animations[i];
+            const [idx1, idx2] = animation.indices;
+            const compElement = animation.ArrayStart;
+        
+            if (animation.type === 'comparison') {
+              // Highlight the bars being compared with different colors
+              setTimeout(() => {
+                arrayBars[compElement].style.backgroundColor = "#ffdb58";
+                arrayBars[idx1].style.backgroundColor = "#ffdb58";
+                arrayBars[idx2].style.backgroundColor = 'red';
+              }, i * 300); // Adjust this delay as needed
+        
+              // Revert the color back to the primary color after comparison is done
+                setTimeout(() => {
+                    arrayBars[compElement].style.backgroundColor = PRIMARY_COLOR;
+                    arrayBars[idx1].style.backgroundColor = PRIMARY_COLOR;
+                    arrayBars[idx2].style.backgroundColor = PRIMARY_COLOR;
+                }, (i + 1) * 300); // Adjust this delay as needed
+            } else if (animation.type === 'swap') {
+              // Swap the bars and change their height
+              setTimeout(() => {
+                const tempHeight = arrayBars[idx1].style.height;
+                arrayBars[idx1].style.height = arrayBars[idx2].style.height;
+                arrayBars[idx2].style.height = tempHeight;
+              }, i * 300); // Adjust this delay as needed
+            }
+        }
+      }
        
     
     function arrayEqual(arrayOne, arrayTwo){
@@ -71,7 +108,7 @@ function SortingVisu() {
     const testSort = () => {
         for(let i = 0; i <100; i++){
             generateRandomNumbers();
-            BubbleSortAlgo();
+            SortAlgoTest();
         }
     }
 
@@ -83,7 +120,10 @@ function SortingVisu() {
       ))}
     <button onClick={()=>generateRandomNumbers()}>Generate New Array</button>
     <button onClick={()=>BubbleSortAlgo()}>BubbleSortAlgo</button>
-    <button onClick={()=>testSort()}>TestBubbleSortAlgo</button>
+    
+    <button onClick={()=>SelectionSortVisu()}>SelectionSortAlgo</button>
+    <button onClick={()=>SortAlgoTest()}>SelectionSortAlgoTest</button>
+    <button onClick={()=>testSort()}>Robost Test</button>
   </div>
   )
 }
