@@ -12,7 +12,7 @@ function SortingVisu() {
 
     const generateRandomNumbers = () => {
         const newRandomNumbers = [];
-        for (let i = 0; i < 350; i++) {
+        for (let i = 0; i < 25; i++) {
           newRandomNumbers.push(Math.floor(Math.random() * (700 - 5 + 1)) + 5);
         }
         setRandomNumbers(newRandomNumbers);
@@ -22,12 +22,44 @@ function SortingVisu() {
         generateRandomNumbers();
     }, []);
 
-    const BubbleSortAlgo = ()=>{
-        const JsSort = randomNumbers.slice().sort((a,b) => a - b);
-        const MySort = BubbleSort(randomNumbers);
-        console.log(arrayEqual(JsSort,MySort));
-    }
+    // const BubbleSortAlgo = ()=>{
+    //     const JsSort = randomNumbers.slice().sort((a,b) => a - b);
+    //     const MySort = BubbleSort(randomNumbers);
+    //     console.log(arrayEqual(JsSort,MySort));
+    // }
 
+    const BubbleSortAlgo = () => {
+        const animations = BubbleSort(randomNumbers);
+        const arrayBars = document.getElementsByClassName('array-bar');
+      
+        for (let i = 0; i < animations.length; i++) {
+            const animation = animations[i];
+            const [idx1, idx2] = animation.indices;
+        
+            if (animation.type === 'comparison') {
+              // Highlight the bars being compared with different colors
+              setTimeout(() => {
+                arrayBars[idx1].style.backgroundColor = 'red';
+                arrayBars[idx2].style.backgroundColor = 'red';
+              }, i * 300); // Adjust this delay as needed
+        
+              // Revert the color back to the primary color after comparison is done
+                setTimeout(() => {
+                    arrayBars[idx1].style.backgroundColor = PRIMARY_COLOR;
+                    arrayBars[idx2].style.backgroundColor = PRIMARY_COLOR;
+                }, (i + 1) * 300); // Adjust this delay as needed
+            } else if (animation.type === 'swap') {
+              // Swap the bars and change their height
+              setTimeout(() => {
+                const tempHeight = arrayBars[idx1].style.height;
+                arrayBars[idx1].style.height = arrayBars[idx2].style.height;
+                arrayBars[idx2].style.height = tempHeight;
+              }, i * 300); // Adjust this delay as needed
+            }
+        }
+      };
+       
+    
     function arrayEqual(arrayOne, arrayTwo){
         if(arrayOne.length !== arrayTwo.length) return false;
         for(let i = 0; i<randomNumbers.length; i++){
