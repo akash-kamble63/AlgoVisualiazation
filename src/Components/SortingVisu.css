@@ -1,5 +1,6 @@
 .array-container{
-    display: absolute;
+    display: flex;
+    justify-content: center;
     left: 100px;
     
 }
